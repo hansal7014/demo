@@ -1,25 +1,46 @@
 pipeline {
-  agent {
-    node {
-      label 'master'
-    }
-
-  }
-  stages {
-    stage('SCM') {
-      steps {
-        git(url: 'https://github.com/mitesh51/AntExample.git', branch: 'master', poll: true)
-      }
-    }
-    stage('Build') {
-      steps {
-        script {
-          def antHome = tool 'apache-ant-1.10.5';
-          bat "${antHome}/bin/ant -d clean war"
-        }
-
-        archiveArtifacts(artifacts: '**/*.war', onlyIfSuccessful: true)
-      }
-    }
-  }
+ agent any
+ stages {
+ stage('One') {
+ steps {
+ echo 'Hi, this is Zulaikha from Seneca'
+ }
+}
+stage('Two') {
+steps {
+ input('Do you want to proceed?')
+ }
+}
+stage('Three') {
+when {
+ not {
+ branch "master"
+ }
+ }
+steps {
+ echo "Hello"
+ }
+ }
+stage('Four') {
+parallel {
+ stage('Unit Test') {
+ steps {
+ echo "Running the unit test..."
+ }
+ }
+ stage('Integration test') {
+ agent {
+ docker {
+ reuseNode true
+image 'ubuntu'
+ }
+ }
+ steps {
+ echo "Running the integration
+test..."
+ }
+ }
+}
+}
+ }
 }
