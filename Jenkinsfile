@@ -36,8 +36,7 @@ image 'ubuntu'
  }
  }
  steps {
- echo "Running the integration
-test..."
+ echo "Running the integration test..."
  }
  }
 }
